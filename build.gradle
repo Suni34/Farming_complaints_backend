@@ -46,11 +46,20 @@ implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tes
 tasks.named('test') {
 	useJUnitPlatform()
 }
-jar {
-manifest {
-attributes(
-'Main-Class': 'com.example.complaints.ComplaintsApplication'
-)
-}
-from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
+
+
+
+
+task createfatJar(type: Jar) {
+  duplicatesStrategy 'exclude'
+  manifest {
+    attributes ('Main-Class': 'com.example.complaints.ComplaintsApplication')
+  }
+  archiveClassifier = "all"
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+  with jar
+}	
+	
+
